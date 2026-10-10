@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EMI Calculator India – Home Loan, Car Loan, Personal Loan EMI</title>
+<meta name="description" content="Free EMI calculator for India. Calculate home loan, car loan and personal loan EMI in rupees, see total interest, prepayment savings, and compare two loans.">
+<style>
+:root{--bg:#f2f6f9;--card:#fff;--ink:#12263a;--mute:#5b6b7b;--line:#d9e2ea;--prin:#0f7b6c;--int:#e0902b;--accent:#0f7b6c;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a26;--card:#162636;--ink:#e8f0f6;--mute:#93a6b8;--line:#27394b;--prin:#37c2ae;--int:#f0a94a;--accent:#37c2ae;--on:#0e1a26}}
+:root[data-theme="dark"]{--bg:#0e1a26;--card:#162636;--ink:#e8f0f6;--mute:#93a6b8;--line:#27394b;--prin:#37c2ae;--int:#f0a94a;--accent:#37c2ae;--on:#0e1a26}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+h1{font:700 clamp(1.5rem,5vw,2.1rem)/1.15 Georgia,"Times New Roman",serif;margin:6px 0;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 16px;max-width:60ch}
+button{font:inherit;cursor:pointer}
+.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 12px;white-space:nowrap}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px}
+.tabs button{flex:0 0 auto;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-weight:600}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.row{margin-bottom:16px}.row:last-child{margin-bottom:0}
+.lab{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;font-weight:600}
+input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 10px;width:150px;text-align:right}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.emi{text-align:center;padding:6px 0 14px}
+.emi small{color:var(--mute);display:block}
+.emi b{font:700 clamp(2rem,9vw,3rem)/1.1 Georgia,serif;color:var(--accent);display:block;margin-top:4px}
+.bar{height:14px;border-radius:7px;overflow:hidden;display:flex;background:var(--line)}
+.bar i{display:block;height:100%;transition:width .3s}
+.leg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.leg div{border-left:4px solid;padding-left:10px}
+.leg small{color:var(--mute);display:block}.leg b{font-size:1.05rem}
+.tot{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-weight:600}
+.save{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--bg);font-weight:600;color:var(--accent)}
+.ad{min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:.8rem;margin-bottom:16px}
+h2{font-size:1.15rem;margin:0 0 10px}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.hd h2{margin:0}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:420px}
+th,td{padding:8px 6px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}th{color:var(--mute);font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.two .lab{flex-direction:column;align-items:stretch}.two input[type=number]{width:100%}
+.cmp td:first-child{color:var(--mute)}
+.guide h3{font-size:1rem;margin:14px 0 2px}.guide p{color:var(--mute);margin:0 0 8px}
+footer{color:var(--mute);font-size:.8rem;text-align:center;margin-top:20px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+@media print{.tabs,.ad,.ghost,.inputs,.guide,footer{display:none!important}body{background:#fff;color:#000}.card{border:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div><h1>EMI Calculator India</h1>
+<p class="sub" id="sub"></p></div><button class="ghost" id="theme" aria-label="Switch light or dark theme">◐ Theme</button></div>
+
+<div class="tabs" role="tablist" id="tabs">
+<button role="tab" data-t="home" aria-selected="true">Home loan</button>
+<button role="tab" data-t="car" aria-selected="false">Car loan</button>
+<button role="tab" data-t="personal" aria-selected="false">Personal loan</button>
+<button role="tab" data-t="compare" aria-selected="false">Compare loans</button>
+</div>
+
+<section id="calc">
+<div class="card inputs">
+  <div class="row"><div class="lab"><label for="amt">Loan amount (₹)</label><input id="amt" type="number" min="1000" step="1000"></div><input id="amtR" type="range" aria-label="Loan amount slider"></div>
+  <div class="row"><div class="lab"><label for="rate">Interest rate (% per year)</label><input id="rate" type="number" min="0" max="40" step="0.05"></div><input id="rateR" type="range" min="0" max="30" step="0.05" aria-label="Interest rate slider"></div>
+  <div class="row"><div class="lab"><label for="ten">Loan term (years)</label><input id="ten" type="number" min="1" max="40" step="1"></div><input id="tenR" type="range" min="1" max="40" step="1" aria-label="Loan term slider"></div>
+  <div class="row"><div class="lab"><label for="ext">Extra prepayment every month (₹)</label><input id="ext" type="number" min="0" step="500" value="0"></div><input id="extR" type="range" min="0" step="500" aria-label="Prepayment slider"></div>
+</div>
+<div class="card" aria-live="polite">
+  <div class="emi"><small>Your monthly EMI</small><b id="emi">–</b></div>
+  <div class="bar" role="img" aria-label="Principal versus interest"><i id="bp" style="background:var(--prin)"></i><i id="bi" style="background:var(--int)"></i></div>
+  <div class="leg"><div style="border-color:var(--prin)"><small>Principal</small><b id="pr">–</b></div><div style="border-color:var(--int)"><small>Total interest</small><b id="in">–</b></div></div>
+  <div class="tot"><span>Total you will pay</span><span id="tp">–</span></div>
+  <div class="save" id="save" hidden></div>
+</div>
+<div class="ad" aria-hidden="true">Ad space</div>
+<div class="card"><div class="hd"><h2>Year-by-year schedule</h2><button class="ghost" id="print">Print</button></div>
+<div class="scroll"><table><thead><tr><th>Year</th><th>Principal paid</th><th>Interest paid</th><th>Balance left</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+</section>
+
+<section id="compare" hidden>
+<div class="card"><div class="two">
+ <div><h2>Loan A</h2>
+  <div class="row"><div class="lab"><label for="a1">Amount (₹)</label><input id="a1" type="number" value="5000000" step="10000"></div></div>
+  <div class="row"><div class="lab"><label for="a2">Rate (% p.a.)</label><input id="a2" type="number" value="8.5" step="0.05"></div></div>
+  <div class="row"><div class="lab"><label for="a3">Years</label><input id="a3" type="number" value="20"></div></div></div>
+ <div><h2>Loan B</h2>
+  <div class="row"><div class="lab"><label for="b1">Amount (₹)</label><input id="b1" type="number" value="5000000" step="10000"></div></div>
+  <div class="row"><div class="lab"><label for="b2">Rate (% p.a.)</label><input id="b2" type="number" value="9" step="0.05"></div></div>
+  <div class="row"><div class="lab"><label for="b3">Years</label><input id="b3" type="number" value="15"></div></div></div>
+</div></div>
+<div class="card cmp" aria-live="polite"><div class="scroll"><table><thead><tr><th></th><th>Loan A</th><th>Loan B</th></tr></thead><tbody id="cmpRows"></tbody></table></div>
+<div class="save" id="cmpNote"></div></div>
+<div class="ad" aria-hidden="true">Ad space</div>
+</section>
+
+<div class="card guide"><h2>EMI guide for Indian borrowers</h2>
+<p>EMI = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1). P is the loan amount, r is the monthly rate (annual rate ÷ 12 ÷ 100) and n is the number of monthly instalments.</p>
+<h3>Home loan EMI</h3><p>Home loans have the longest terms, often 15 to 30 years, and the lowest rates. A small rate cut or a short term can save lakhs in interest. Many borrowers also claim tax benefits on principal and interest, so check current rules.</p>
+<h3>Car loan EMI</h3><p>Car loans run 3 to 7 years. A bigger down payment lowers your EMI and the interest you pay, because the car loses value faster than a house.</p>
+<h3>Personal loan EMI</h3><p>Personal loans are unsecured, so rates are higher, often 10% to 20%. Keep the term short and borrow only what you need.</p>
+<h3>Does prepayment help?</h3><p>Yes. Extra payments go straight to principal, which cuts interest and ends the loan earlier. Use the prepayment box above to see how much you save.</p>
+<h3>Which is cheaper, a long or a short term?</h3><p>A long term gives a lower EMI but costs more in total interest. Use the Compare tab to see the exact difference.</p></div>
+<footer>Estimates only. Banks may add processing fees, and their final figures may differ.</footer>
+</div>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var P={home:{a:5000000,min:100000,max:50000000,st:100000,r:8.5,t:20,x:50000,sub:"Estimate your home loan EMI, total interest and repayment schedule in rupees."},
+car:{a:800000,min:50000,max:5000000,st:10000,r:9,t:5,x:10000,sub:"Estimate your car loan EMI and see how much interest you will pay."},
+personal:{a:300000,min:10000,max:4000000,st:5000,r:12,t:3,x:10000,sub:"Estimate your personal loan EMI and total cost before you apply."}};
+var type='home';
+var nf=new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0});
+function fmt(v){return nf.format(Math.round(v))}
+function emi(p,ar,n){var r=ar/1200;return r?p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):p/n}
+function setType(t){
+  type=t;
+  var tabs=document.querySelectorAll('#tabs button');
+  for(var i=0;i<tabs.length;i++)tabs[i].setAttribute('aria-selected',tabs[i].dataset.t===t);
+  $('calc').hidden=(t==='compare');$('compare').hidden=(t!=='compare');
+  if(t==='compare'){$('sub').textContent="Put two loans side by side and see which one costs less.";cmp();return}
+  var c=P[t];$('sub').textContent=c.sub;
+  $('amtR').min=c.min;$('amtR').max=c.max;$('amtR').step=c.st;$('amt').step=c.st;
+  $('extR').max=c.x*4;
+  $('amt').value=$('amtR').value=c.a;$('rate').value=$('rateR').value=c.r;$('ten').value=$('tenR').value=c.t;
+  $('ext').value=$('extR').value=0;calc();
+}
+function calc(){
+  var p=Math.max(0,+$('amt').value||0),ar=Math.max(0,+$('rate').value||0),n=Math.max(1,Math.round(+$('ten').value||1))*12,x=Math.max(0,+$('ext').value||0);
+  var r=ar/1200,E=emi(p,ar,n),bal=p,m=0,ti=0,yi=0,yp=0,html='';
+  while(bal>0.5&&m<n+2){m++;var i=bal*r,pay=Math.min(E+x,bal+i),pp=pay-i;bal=Math.max(0,bal-pp);ti+=i;yi+=i;yp+=pp;
+    if(m%12===0||bal<=0.5){html+='<tr><td>'+Math.ceil(m/12)+'</td><td>'+fmt(yp)+'</td><td>'+fmt(yi)+'</td><td>'+fmt(bal<1?0:bal)+'</td></tr>';yi=0;yp=0}}
+  var tot=p+ti,pc=tot?p/tot*100:100;
+  $('emi').textContent=fmt(E);$('pr').textContent=fmt(p);$('in').textContent=fmt(ti);$('tp').textContent=fmt(tot);
+  $('bp').style.width=pc+'%';$('bi').style.width=(100-pc)+'%';$('rows').innerHTML=html;
+  var s=$('save');
+  if(x>0){var base=E*n-p,left=n-m,y=Math.floor(left/12),mo=left%12;
+    s.hidden=false;s.textContent='Prepaying '+fmt(x)+' a month saves you '+fmt(Math.max(0,base-ti))+' in interest and finishes the loan '+(y?y+' yr ':'')+mo+' mo early.'}
+  else s.hidden=true;
+}
+function cmp(){
+  var L=['a','b'].map(function(k){var p=+$(k+'1').value||0,r=+$(k+'2').value||0,n=Math.max(1,+$(k+'3').value||1)*12,e=emi(p,r,n);return{e:e,i:e*n-p,t:e*n}});
+  var rows=[['Monthly EMI','e'],['Total interest','i'],['Total payment','t']],h='';
+  rows.forEach(function(q){h+='<tr><td>'+q[0]+'</td><td>'+fmt(L[0][q[1]])+'</td><td>'+fmt(L[1][q[1]])+'</td></tr>'});
+  $('cmpRows').innerHTML=h;
+  var d=L[0].t-L[1].t;
+  $('cmpNote').textContent=Math.abs(d)<1?'Both loans cost the same in total.':('Loan '+(d<0?'A':'B')+' costs '+fmt(Math.abs(d))+' less in total. Loan '+(L[0].e<L[1].e?'A':'B')+' has the lower monthly EMI.');
+}
+function link(a,b){$(a).addEventListener('input',function(){$(b).value=$(a).value;calc()});$(b).addEventListener('input',function(){$(a).value=$(b).value;calc()})}
+link('amt','amtR');link('rate','rateR');link('ten','tenR');link('ext','extR');
+['a1','a2','a3','b1','b2','b3'].forEach(function(i){$(i).addEventListener('input',cmp)});
+$('tabs').addEventListener('click',function(e){var b=e.target.closest('button');if(b)setType(b.dataset.t)});
+$('print').addEventListener('click',function(){window.print()});
+$('theme').addEventListener('click',function(){
+  var d=document.documentElement,cur=d.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'),nx=cur==='dark'?'light':'dark';
+  d.setAttribute('data-theme',nx);try{localStorage.setItem('emi-theme',nx)}catch(e){}
+});
+try{var th=localStorage.getItem('emi-theme');if(th)document.documentElement.setAttribute('data-theme',th)}catch(e){}
+setType('home');
+})();
+</script>
+</body>
+</html>
